@@ -27,7 +27,6 @@ Output	:
 ** flush /two.txt **
 ** release /two.txt **
 
-
 Command	: cat mount/one.txt mount/two.txt > mount/three.txt
 Output	:
 
@@ -46,11 +45,8 @@ Output	:
 ** flush /three.txt **
 ** release /three.txt **
 
-
 Command	: nano mount/three.txt
 Output	:
-
-Addition of text produced:
 
 ** create: /.three.txt.swp **
 ** write: /.three.txt.swp **
@@ -63,8 +59,19 @@ Addition of text produced:
 ** open: /three.txt **
 ** flush /three.txt **
 ** release /three.txt **
+
+Addition/Deletion of text produced:
+Output	:
+
 ** create: /.three.txt.swp **
 ** write: /.three.txt.swp **
 ** flush /.three.txt.swp **
 ** release /.three.txt.swp **
+
+Saving of file:
+
+** open: /three.txt **
+** truncate: /three.txt **
+** write: /three.txt **
+** flush /three.txt **
 
