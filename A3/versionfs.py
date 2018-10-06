@@ -4,8 +4,18 @@ from __future__ import with_statement
 import logging
 
 import os
+import os.path
+
 import sys
 import errno
+
+import glob
+
+import filecmp
+from shutil import copy2
+
+# Number of versions by which to keep valid
+validVersions = 6
 
 from fuse import FUSE, FuseOSError, Operations, LoggingMixIn
 
@@ -122,6 +132,10 @@ class VersionFS(LoggingMixIn, Operations):
     def open(self, path, flags):
         print '** open:', path, '**'
         full_path = self._full_path(path)
+
+        # Copy file to a temporary file, to compare to upon release
+        copy2(full_path, full_path + ".tmp")
+
         return os.open(full_path, flags)
 
     def create(self, path, mode, fi=None):
@@ -137,6 +151,7 @@ class VersionFS(LoggingMixIn, Operations):
     def write(self, path, buf, offset, fh):
         print '** write:', path, '**'
         os.lseek(fh, offset, os.SEEK_SET)
+
         return os.write(fh, buf)
 
     def truncate(self, path, length, fh=None):
@@ -149,18 +164,55 @@ class VersionFS(LoggingMixIn, Operations):
         print '** flush', path, '**'
         return os.fsync(fh)
 
+    # Called ONCE for every open()
     def release(self, path, fh):
         print '** release', path, '**'
+
+        print ("GOT INTO RELEASE METHOD")
+
+        temp_path = self._full_path(path) + '.tmp'
+
+        # Check that a temporary file exists
+        if os.path.exists(temp_path):
+            print("TEMP FILE DOES EXIST\n")
+            if filecmp.cmp(self._full_path(path), temp_path):
+                print("\nFILE WASN'T EDITED, NEW VERSION NEEDN'T BE MADE\n\n")
+            else :
+                print("\nFILE WAS EDITED, NEW VERSION SHOULD BE MADE\n\n")
+
+            # Remove temporary file
+            os.remove(temp_path)
+
+        print("FINISHED RELEASE CHECK\n")
+
         return os.close(fh)
 
     def fsync(self, path, fdatasync, fh):
         print '** fsync:', path, '**'
         return self.flush(path, fh)
 
+    def newVersion(self, path):
+
+        global validVersions
+
+        # Save basename of input path
+        basename = os.path.basename(path)
+
+        # Check how many versions exist
+        numberOfVersions = len(glob.glob1(os.getcwd() + '.versiondir', basename + "*"))
+
+        # Check whether the number of found versions is greater than what we want
+        if (numberOfVersions > validVersions):
+            print("FOUND MORE THAN ALLOWED VERSIONS\n")
+        else:
+
+
+
+
 
 def main(mountpoint):
     FUSE(VersionFS(), mountpoint, nothreads=True, foreground=True)
 
 if __name__ == '__main__':
-    # logging.basicConfig(level=logging.DEBUG)
+    #logging.basicConfig(level=logging.DEBUG)
     main(sys.argv[1])
