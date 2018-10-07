@@ -6,6 +6,8 @@ import logging
 import os
 import os.path
 
+
+
 import sys
 import errno
 
@@ -147,8 +149,8 @@ class VersionFS(LoggingMixIn, Operations):
             print("CREATING FILE: " + full_path + ".tmp" + "\n")
 
             # Create empty temporary file, to compare to for versioning
-            p = Path(full_path)
-            p.write_file("")
+            with open(full_path + ".tmp", "w") as f:
+                f.write("")
 
         return os.open(full_path, os.O_WRONLY | os.O_CREAT, mode)
 
@@ -177,25 +179,19 @@ class VersionFS(LoggingMixIn, Operations):
     def release(self, path, fh):
         print '** release', path, '**'
 
-        print ("GOT INTO RELEASE METHOD")
-
         temp_path = self._full_path(path) + '.tmp'
 
         # Check that a temporary file exists
         if os.path.exists(temp_path):
-            print("TEMP FILE DOES EXIST\n")
             if filecmp.cmp(self._full_path(path), temp_path):
-                print("\nFILE WASN'T EDITED, NEW VERSION NEEDN'T BE MADE\n\n")
+
+                # Remove temporary file (NOTE POTENTIAL DELAY BETWEEN NEW VERSION CREATION AND TEMP DELETION)
+                os.remove(temp_path)
             else :
-                print("\nFILE WAS EDITED, NEW VERSION SHOULD BE MADE")
                 self.newversion(self._full_path(path))
 
-            # Remove temporary file (NOTE DELAY BETWEEN NEW VERSION CREATION AND TEMP DELETION)
-            os.remove(temp_path)
-
-
-        print("FINISHED RELEASE CHECK\n")
-
+                # Remove temporary file (NOTE POTENTIAL DELAY BETWEEN NEW VERSION CREATION AND TEMP DELETION)
+                os.remove(temp_path)
 
         return os.close(fh)
 
@@ -234,14 +230,16 @@ class VersionFS(LoggingMixIn, Operations):
                 # Get number of version being dealt with
                 versionNumber = int(x[-1:])
 
+                print("\nversionNumber: " + str(versionNumber) + ", validVersions: " + str(validVersions) + "\n")
+
                 if (versionNumber == validVersions):
-                    print("SHOULD BE DELETING END VERSION NOW, WITH NUMBER: " + versionNumber)
+                    print("SHOULD BE DELETING END VERSION NOW, WITH NUMBER: " + str(versionNumber))
                     os.remove(path + "." + str(validVersions))
                 else :
                     os.rename(path + "." + str(versionNumber), path + "." + str(versionNumber + 1))
 
             # Copy over contents of newest version, to the newest version
-            copy2(path, path + "." + str(numberOfVersions + 1))
+            copy2(path, path + ".1")
         else:
             print("NUMBER OF VERSIONS IS UNDER, OKAY TO ADD ONE ON")
 
