@@ -14,7 +14,7 @@ import glob
 import filecmp
 from shutil import copy2
 
-# Number of versions by which to keep valid
+# Number of versions by which to keep valid (can be max 9)
 validVersions = 6
 
 from fuse import FUSE, FuseOSError, Operations, LoggingMixIn
@@ -178,7 +178,8 @@ class VersionFS(LoggingMixIn, Operations):
             if filecmp.cmp(self._full_path(path), temp_path):
                 print("\nFILE WASN'T EDITED, NEW VERSION NEEDN'T BE MADE\n\n")
             else :
-                print("\nFILE WAS EDITED, NEW VERSION SHOULD BE MADE\n\n")
+                print("\nFILE WAS EDITED, NEW VERSION SHOULD BE MADE")
+                self.newversion(self._full_path(path))
 
             # Remove temporary file
             os.remove(temp_path)
@@ -191,22 +192,57 @@ class VersionFS(LoggingMixIn, Operations):
         print '** fsync:', path, '**'
         return self.flush(path, fh)
 
-    def newVersion(self, path):
+    # Method to be called when NEW version is to be made
+    def newversion(self, path):
 
         global validVersions
 
         # Save basename of input path
         basename = os.path.basename(path)
 
-        # Check how many versions exist
-        numberOfVersions = len(glob.glob1(os.getcwd() + '.versiondir', basename + "*"))
+        # Save dirname of input path
+        dirname = os.path.dirname(path)
 
-        # Check whether the number of found versions is greater than what we want
-        if (numberOfVersions > validVersions):
-            print("FOUND MORE THAN ALLOWED VERSIONS\n")
+        # Get list of versions in directory
+        versionNames = glob.glob1(dirname, basename + ".[0-9]")
+
+        # Check how many versions exist, following naming conventions
+        numberOfVersions = len(versionNames)
+
+        print("DIRNAME BEING LOOKED IN: " + dirname + "\n")
+        print("NUMBER OF COUNTED VERSIONS IS CURRENTLY: " + str(numberOfVersions))
+
+        # Check if we may create another version without having to delete one
+        if (numberOfVersions + 1 > validVersions):
+            print("SHIFTING VERSIONS\n")
+
+            # Shift all filenames over, and make a new file with .1 appended
+            for x in versionNames:
+
+                # Get number of version being dealt with
+                versionNumber = int(x[-1:])
+
+                if (versionNumber == validVersions):
+                    print("SHOULD BE DELETING END VERSION NOW, WITH NUMBER: " + versionNumber)
+                    os.remove(path + "." + str(validVersions))
+                else :
+                    os.rename(path + "." + str(versionNumber), path + "." + str(versionNumber + 1))
+
+            # Copy over contents of newest version, to the newest version
+            copy2(path, path + "." + str(numberOfVersions + 1))
         else:
+            print("ALL GOOD NUMBER OF VERSIONS OWH, ADD ONE ON")
+
+            # Shift all versions
+            for x in versionNames:
+                # Get number of version being dealt with
+                versionNumber = int(x[-1:])
+                # print("CHANGING FROM: " + path + "." + versionNumber + ", TO: " + path + "." + str(versionNumber + 1))
+                os.rename(path + "." + str(versionNumber), path + "." + str(versionNumber + 1))
 
 
+            # Copy file contents to newest version
+            copy2(path, path + "." + "1")
 
 
 
