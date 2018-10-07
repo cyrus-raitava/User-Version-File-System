@@ -141,6 +141,15 @@ class VersionFS(LoggingMixIn, Operations):
     def create(self, path, mode, fi=None):
         print '** create:', path, '**'
         full_path = self._full_path(path)
+
+        # Check file to be made is NOT hidden
+        if not (os.path.basename(full_path)[0] == "."):
+            print("CREATING FILE: " + full_path + ".tmp" + "\n")
+
+            # Create empty temporary file, to compare to for versioning
+            p = Path(full_path)
+            p.write_file("")
+
         return os.open(full_path, os.O_WRONLY | os.O_CREAT, mode)
 
     def read(self, path, length, offset, fh):
@@ -181,10 +190,12 @@ class VersionFS(LoggingMixIn, Operations):
                 print("\nFILE WAS EDITED, NEW VERSION SHOULD BE MADE")
                 self.newversion(self._full_path(path))
 
-            # Remove temporary file
+            # Remove temporary file (NOTE DELAY BETWEEN NEW VERSION CREATION AND TEMP DELETION)
             os.remove(temp_path)
 
+
         print("FINISHED RELEASE CHECK\n")
+
 
         return os.close(fh)
 
@@ -205,6 +216,7 @@ class VersionFS(LoggingMixIn, Operations):
 
         # Get list of versions in directory
         versionNames = glob.glob1(dirname, basename + ".[0-9]")
+        versionNames.sort()
 
         # Check how many versions exist, following naming conventions
         numberOfVersions = len(versionNames)
@@ -217,7 +229,7 @@ class VersionFS(LoggingMixIn, Operations):
             print("SHIFTING VERSIONS\n")
 
             # Shift all filenames over, and make a new file with .1 appended
-            for x in versionNames:
+            for x in reversed(versionNames):
 
                 # Get number of version being dealt with
                 versionNumber = int(x[-1:])
@@ -231,13 +243,13 @@ class VersionFS(LoggingMixIn, Operations):
             # Copy over contents of newest version, to the newest version
             copy2(path, path + "." + str(numberOfVersions + 1))
         else:
-            print("ALL GOOD NUMBER OF VERSIONS OWH, ADD ONE ON")
+            print("NUMBER OF VERSIONS IS UNDER, OKAY TO ADD ONE ON")
 
             # Shift all versions
-            for x in versionNames:
+            for x in reversed(versionNames):
                 # Get number of version being dealt with
                 versionNumber = int(x[-1:])
-                # print("CHANGING FROM: " + path + "." + versionNumber + ", TO: " + path + "." + str(versionNumber + 1))
+                print("CHANGING FROM: " + x + ", TO: " + x[:-1] + str(versionNumber + 1))
                 os.rename(path + "." + str(versionNumber), path + "." + str(versionNumber + 1))
 
 
@@ -250,5 +262,5 @@ def main(mountpoint):
     FUSE(VersionFS(), mountpoint, nothreads=True, foreground=True)
 
 if __name__ == '__main__':
-    #logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.DEBUG)
     main(sys.argv[1])
