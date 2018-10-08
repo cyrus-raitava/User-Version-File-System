@@ -42,6 +42,16 @@ class VersionFS(LoggingMixIn, Operations):
         path = os.path.join(self.root, partial)
         return path
 
+    def isHidden(self, path):
+        if (os.path.basename(path)[:1] == "."):
+            return True
+        return False
+
+    def isTemp(self, path):
+        if (os.path.basename(path)[-4:] == ".tmp"):
+            return True
+        return False
+
     # Filesystem methods
     # ==================
 
@@ -74,12 +84,9 @@ class VersionFS(LoggingMixIn, Operations):
 
         dirents = ['.', '..']
         if os.path.isdir(full_path):
-            dirlist = os.listdir(full_path)
-
-            for x in dirlist:
-                if (x[:1] == "."):
-                    dirlist.remove(x)
-            dirents.extend(dirlist)
+            for x in os.listdir(full_path):
+                if not (self.isHidden(x) | self.isTemp(x)):
+                    dirents.append(x)
         for r in dirents:
             yield r
 

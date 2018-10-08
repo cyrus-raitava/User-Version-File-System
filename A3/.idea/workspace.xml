@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="166749ac-1b5f-43e8-b8bd-8d90862fd161" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/A3.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/A3.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/versionfs.py" beforeDir="false" afterPath="$PROJECT_DIR$/versionfs.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -16,7 +16,8 @@
       <usages-collector id="statistics.lifecycle.project">
         <counts>
           <entry key="project.open.time.1" value="1" />
-          <entry key="project.opened" value="1" />
+          <entry key="project.open.time.13" value="1" />
+          <entry key="project.opened" value="2" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -31,12 +32,12 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="5181" />
+          <entry key="py" value="5474" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="5181" />
+          <entry key="Python" value="5474" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.vcs.git.usages" />
@@ -44,14 +45,15 @@
     </session>
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/versionfs.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="370">
-              <caret line="81" column="34" selection-start-line="81" selection-start-column="34" selection-end-line="81" selection-end-column="34" />
+            <state relative-caret-position="249">
+              <caret line="76" column="32" lean-forward="true" selection-start-line="76" selection-start-column="32" selection-end-line="76" selection-end-column="32" />
               <folding>
                 <element signature="e#22#59#0" expanded="true" />
+                <marker date="1538943851101" expanded="true" signature="1125:1228" ph="..." />
               </folding>
             </state>
           </provider>
@@ -82,7 +84,7 @@
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="194" />
-    <option name="y" value="48" />
+    <option name="y" value="47" />
     <option name="width" value="1228" />
     <option name="height" value="761" />
   </component>
@@ -92,7 +94,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -104,6 +105,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -147,10 +149,10 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="157" y="44" width="1228" height="761" extended-state="0" />
+    <frame x="194" y="47" width="1228" height="761" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1928934" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1962775" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -194,10 +196,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/versionfs.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="370">
-          <caret line="81" column="34" selection-start-line="81" selection-start-column="34" selection-end-line="81" selection-end-column="34" />
+        <state relative-caret-position="249">
+          <caret line="76" column="32" lean-forward="true" selection-start-line="76" selection-start-column="32" selection-end-line="76" selection-end-column="32" />
           <folding>
             <element signature="e#22#59#0" expanded="true" />
+            <marker date="1538943851101" expanded="true" signature="1125:1228" ph="..." />
           </folding>
         </state>
       </provider>
