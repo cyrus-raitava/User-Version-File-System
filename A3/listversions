@@ -19,4 +19,6 @@ def main(filename):
             print(x[1:])
 
 if __name__ == '__main__':
+    if not (len(sys.argv) == 2):
+        sys.exit("ERROR: Incorrect number of arguments given, please enter a valid filename.")
     main(sys.argv[1])

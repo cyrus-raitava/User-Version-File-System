@@ -100,4 +100,6 @@ def revertversion(path, number):
 
 
 if __name__ == '__main__':
+    if not (len(sys.argv) == 3):
+        sys.exit("ERROR: Incorrect number of arguments given, please enter both a valid filename, and valid version number.")
     main(sys.argv[1], sys.argv[2])

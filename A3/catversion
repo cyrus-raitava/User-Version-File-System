@@ -1,0 +1,32 @@
+#!/usr/bin/env python
+
+import sys
+import os
+
+def main(filename, versionNumber):
+
+    # Get file path of specified file
+    filepath = os.getcwd() +  "/.versiondir/." + filename + "." + str(versionNumber)
+
+    # print(os.getcwd() + "/.versiondir/" + str(filename))
+
+    if not (os.path.exists(filepath)):
+        sys.exit("ERROR: file does not exist! Make sure you are referencing a file that exists.")
+    elif int(versionNumber) < 1 :
+        sys.exit("ERROR: versionNumber specified does not exist. Please try again.")
+    else :
+        # Revert file back to specified version number
+        printversion(filepath, filename, versionNumber)
+
+def printversion(filepath, filename, versionnumber):
+    f = open(str(filepath), "r")
+
+    if f.mode == "r":
+        # use the read() function to read file's contents
+        contents = f.read()
+        print(contents)
+
+if (__name__ == '__main__'):
+    if not (len(sys.argv) == 3):
+        sys.exit("ERROR: Incorrect number of arguments given, please enter both a valid filename, and valid version number.")
+    main(sys.argv[1], sys.argv[2])

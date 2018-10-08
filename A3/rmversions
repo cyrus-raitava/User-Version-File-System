@@ -1,0 +1,32 @@
+#!/usr/bin/env python
+
+import sys
+import os
+import glob
+
+def main(filename):
+    # Get file path of specified file
+    filepath = os.getcwd() +  "/.versiondir/" + filename
+
+    if not (os.path.exists(filepath)):
+        sys.exit("ERROR: file does not exist! Make sure you are referencing a file that exists.")
+    else:
+        # Remove all versions except for the first
+        removeversions(filename)
+
+
+def removeversions(filename):
+    dirname = os.getcwd() + "/.versiondir/"
+
+    # Sort and find all file versions
+    versions = glob.glob1(dirname, "." + filename + ".[0-9]")
+    versions.sort()
+
+    # Only remove those that AREN'T the current version
+    for x in reversed(versions):
+        if not (x.endswith('1')):
+            os.remove(dirname + str(x))
+
+
+if __name__ == '__main__':
+    main(sys.argv[1])
