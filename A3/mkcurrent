@@ -1,0 +1,102 @@
+#!/usr/bin/env python
+
+import sys
+import os
+import glob
+from shutil import copy2
+from versionfs import validVersions
+
+def main(filename, versionNumber):
+    filepath = os.getcwd() +  "/.versiondir/" + filename
+
+    # print(os.getcwd() + "/.versiondir/" + str(filename))
+
+    if not (os.path.exists(filepath)):
+        sys.exit("ERROR: file does not exist! Make sure you are referencing a file that exists.")
+    elif int(versionNumber) < 1 :
+        sys.exit("ERROR: versionNumber specified does not exist. Please try again.")
+    else :
+        # Revert file back to specified version number
+        revertversion(filepath, versionNumber)
+
+def revertversion(path, number):
+
+    # Save basename of input path
+    basename = os.path.basename(path)
+
+    # Save dirname of input path
+    dirname = os.path.dirname(path)
+
+    hiddenname = dirname + "/." + basename + "." + str(number)
+    print("HIDDEN NAME: " + hiddenname)
+
+    # Get list of versions in directory
+    versionNames = glob.glob1(dirname, os.path.basename(hiddenname)[:-1] + "[0-9]")
+    print("GREP TEXT: " + dirname + os.path.basename(hiddenname)[:-1] + "[0-9]")
+    versionNames.sort()
+
+    for x in versionNames:
+        print("ELEMENT: " + x)
+
+    # Check how many versions exist, following naming conventions
+    numberOfVersions = len(versionNames)
+
+    if int(number) > numberOfVersions:
+        print("number: " + str(number)  + ", numberOfVersions: " + str(numberOfVersions))
+        print("Returned value: " + str(number > numberOfVersions))
+        sys.exit("ERROR: version requested to revert to does not exist")
+
+    # Copy contents from specified version to equivalent temp file, to be deleted later
+    tempfile = hiddenname + ".tmp"
+
+    print("COPYING FROM: " + hiddenname + ", TO: " + tempfile)
+    copy2(hiddenname, tempfile)
+
+    # Check if we may create another version without having to delete one
+    if (numberOfVersions + 1 > validVersions):
+        print("NEED TO SHIFT DELETE")
+
+        # Shift all versions
+        for x in reversed(versionNames):
+
+            versionNumber = int(x[-1:])
+
+            print("versionNumber: " + str(versionNumber) + ", validVersions: " + str(validVersions))
+
+            if (int(versionNumber) == int(validVersions)):
+                print("SHOULD BE DELETING END VERSION NOW, WITH NUMBER: " + str(versionNumber) + "\n")
+                print("REMOVING: " + path + "." + str(validVersions) + "\n")
+                os.remove(path + "." + str(validVersions))
+
+            # Get number of version being dealt with
+            versionNumber = int(x[-1:])
+            print("CHANGING FROM: " + hiddenname[:-1] + str(versionNumber) + ", TO: " + hiddenname[:-1] + str(versionNumber + 1))
+            os.rename(hiddenname[:-1] + str(versionNumber), hiddenname[:-1] + str(versionNumber + 1))
+
+        # Remove and original file
+        os.remove(path)
+
+        # Copy file contents to original file, and first version
+        copy2(tempfile, hiddenname[:-1] + "1")
+        copy2(tempfile, path)
+
+    else:
+
+        # Shift all versions
+        for x in reversed(versionNames):
+            # Get number of version being dealt with
+            versionNumber = int(x[-1:])
+            print("CHANGING FROM: " + hiddenname[:-1] + str(versionNumber) + ", TO: " + hiddenname[:-1] + str(versionNumber + 1))
+            os.rename(hiddenname[:-1] + str(versionNumber), hiddenname[:-1] + str(versionNumber + 1))
+
+        # Remove and original file
+        os.remove(path)
+
+        # Copy file contents to original file, and first version
+        copy2(tempfile, hiddenname[:-1] + "1")
+        copy2(tempfile, path)
+
+    os.remove(tempfile)
+
+if __name__ == '__main__':
+    main(sys.argv[1], sys.argv[2])
