@@ -4,6 +4,11 @@ import sys
 import os
 import glob
 
+'''
+Name:   Cyrus Raitava-Kumar
+UPI:    crai897
+'''
+
 def main(filename):
     # Get file path of specified file
     filepath = os.getcwd() +  "/.versiondir/" + filename

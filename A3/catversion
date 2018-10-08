@@ -3,6 +3,11 @@
 import sys
 import os
 
+'''
+Name:   Cyrus Raitava-Kumar
+UPI:    crai897
+'''
+
 def main(filename, versionNumber):
 
     # Get file path of specified file

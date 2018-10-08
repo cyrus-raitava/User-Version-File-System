@@ -2,19 +2,20 @@
 from __future__ import with_statement
 
 import logging
-
 import os
 import os.path
-
 import sys
 import errno
-
 import glob
-
 import filecmp
 from shutil import copy2
 
-# Number of versions by which to keep valid (can be max 9)
+'''
+Name:   Cyrus Raitava-Kumar
+UPI:    crai897
+'''
+
+# Number of versions by which to keep valid (can be max 9, minimum 1)
 validVersions = 6
 
 from fuse import FUSE, FuseOSError, Operations, LoggingMixIn
@@ -145,8 +146,6 @@ class VersionFS(LoggingMixIn, Operations):
         print('** open:', path, '**')
         full_path = self._full_path(path)
 
-        print("COPYING FILE TO: " + self.hide(full_path) + ".tmp" + "\n")
-
         # Copy file to a temporary file, to compare to upon release
         copy2(full_path, self.hide(full_path) + ".tmp")
 
@@ -158,7 +157,6 @@ class VersionFS(LoggingMixIn, Operations):
 
         # Check file to be made is NOT hidden
         if not (os.path.basename(full_path)[:1] == "."):
-            print("CREATING FILE: " + self.hide(full_path) + ".tmp" + "\n")
 
             # Create empty temporary file, to compare to for versioning
             with open(self.hide(full_path) + ".tmp", "w") as f:
@@ -190,10 +188,9 @@ class VersionFS(LoggingMixIn, Operations):
     # Called ONCE for every open()
     def release(self, path, fh):
         print('** release', path, '**')
+        print("\n")
 
         temp_path = self.hide(self._full_path(path) + '.tmp')
-
-        print("TEMP PATH (FOR RELEASE) IS: " + temp_path + "\n")
 
         # Check that a temporary file exists
         if os.path.exists(temp_path):
@@ -201,13 +198,11 @@ class VersionFS(LoggingMixIn, Operations):
             # Compare file with specified temp, to see if they are different
             if filecmp.cmp(self._full_path(path), temp_path):
 
-                print("TEMP FILE PATH TO BE DELETED: " + temp_path)
                 # Remove temporary file (NOTE POTENTIAL DELAY BETWEEN NEW VERSION CREATION AND TEMP DELETION)
                 os.remove(temp_path)
             else :
                 self.newversion(self._full_path(path))
 
-                print("TEMP FILE PATH TO BE DELETED: " + temp_path)
                 # Remove temporary file (NOTE POTENTIAL DELAY BETWEEN NEW VERSION CREATION AND TEMP DELETION)
                 os.remove(temp_path)
 
@@ -235,12 +230,8 @@ class VersionFS(LoggingMixIn, Operations):
         # Check how many versions exist, following naming conventions
         numberOfVersions = len(versionNames)
 
-        print("DIRNAME BEING LOOKED IN: " + dirname + "\n")
-        print("NUMBER OF COUNTED VERSIONS IS CURRENTLY: " + str(numberOfVersions))
-
         # Check if we may create another version without having to delete one
         if (numberOfVersions + 1 > validVersions):
-            print("SHIFTING VERSIONS\n")
 
             # Shift all filenames over, and make a new file with .1 appended
             for x in reversed(versionNames):
@@ -248,43 +239,35 @@ class VersionFS(LoggingMixIn, Operations):
                 # Get number of version being dealt with
                 versionNumber = int(x[-1:])
 
-                print("\nversionNumber: " + str(versionNumber) + ", validVersions: " + str(validVersions) + "\n")
-
-                if (versionNumber == validVersions):
-                    print("SHOULD BE DELETING END VERSION NOW, WITH NUMBER: " + str(versionNumber) + "\n")
-                    print("REMOVING: " + self.hide(path) + "." + str(validVersions) + "\n")
+                if versionNumber == validVersions:
                     os.remove(self.hide(path) + "." + str(validVersions))
-                else :
-                    print("RENAMING: "  + self.hide(path) + "." + str(versionNumber) + ", TO : " + self.hide(path) + "." + str(versionNumber + 1) + "\n")
+                else:
                     os.rename(self.hide(path) + "." + str(versionNumber), self.hide(path) + "." + str(versionNumber + 1))
 
-            print("COPYING OVER CONTENTS TO NEWEST VERSION WITH PATH: " + self.hide(path) + ".1")
             # Copy over contents of newest version, to the newest version
             copy2(path, self.hide(path) + ".1")
         else:
-            print("NUMBER OF VERSIONS IS UNDER, OKAY TO ADD ONE ON")
 
             # Shift all versions
             for x in reversed(versionNames):
                 # Get number of version being dealt with
                 versionNumber = int(x[-1:])
-                print("CHANGING FROM: " + x + ", TO: " + x[:-1] + str(versionNumber + 1))
                 os.rename(self.hide(path) + "." + str(versionNumber), self.hide(path) + "." + str(versionNumber + 1))
-
-            print("COPYING OVER CONTENTS TO NEWEST VERSION WITH PATH: " + self.hide(path) + ".1")
 
             # Copy file contents to newest version
             copy2(path, self.hide(path) + ".1")
 
     # Method to change filename to be hidden if required
     def hide(self, path):
-        if (os.path.basename(path)[:1] == "."):
+        if os.path.basename(path)[:1] == ".":
             return path
         else :
             return os.path.dirname(path) + "/." + os.path.basename(path)
 
+
 def main(mountpoint):
     FUSE(VersionFS(), mountpoint, nothreads=True, foreground=True)
+
 
 if __name__ == '__main__':
     # logging.basicConfig(level=logging.DEBUG)

@@ -4,10 +4,13 @@ import sys
 import os
 import glob
 
+'''
+Name:   Cyrus Raitava-Kumar
+UPI:    crai897
+'''
+
 def main(filename):
     filepath = os.getcwd() + "/.versiondir/" + filename
-
-    # print(os.getcwd() + "/.versiondir/" + str(filename))
 
     if not (os.path.exists(filepath)):
         sys.exit("ERROR: file does not exist! Make sure you are referencing a file that exists.")
