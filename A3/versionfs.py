@@ -6,8 +6,6 @@ import logging
 import os
 import os.path
 
-
-
 import sys
 import errno
 
@@ -28,9 +26,9 @@ class VersionFS(LoggingMixIn, Operations):
         self.root = os.path.join(os.getcwd(), '.versiondir')
         # check to see if the versions directory already exists
         if os.path.exists(self.root):
-            print 'Version directory already exists.'
+            print('Version directory already exists.')
         else:
-            print 'Creating version directory.'
+            print('Creating version directory.')
             os.mkdir(self.root)
 
     # Helpers
@@ -144,7 +142,7 @@ class VersionFS(LoggingMixIn, Operations):
     # ============
 
     def open(self, path, flags):
-        print '** open:', path, '**'
+        print('** open:', path, '**')
         full_path = self._full_path(path)
 
         print("COPYING FILE TO: " + self.hide(full_path) + ".tmp" + "\n")
@@ -155,7 +153,7 @@ class VersionFS(LoggingMixIn, Operations):
         return os.open(full_path, flags)
 
     def create(self, path, mode, fi=None):
-        print '** create:', path, '**'
+        print('** create:', path, '**')
         full_path = self._full_path(path)
 
         # Check file to be made is NOT hidden
@@ -169,29 +167,29 @@ class VersionFS(LoggingMixIn, Operations):
         return os.open(full_path, os.O_WRONLY | os.O_CREAT, mode)
 
     def read(self, path, length, offset, fh):
-        print '** read:', path, '**'
+        print('** read:', path, '**')
         os.lseek(fh, offset, os.SEEK_SET)
         return os.read(fh, length)
 
     def write(self, path, buf, offset, fh):
-        print '** write:', path, '**'
+        print('** write:', path, '**')
         os.lseek(fh, offset, os.SEEK_SET)
 
         return os.write(fh, buf)
 
     def truncate(self, path, length, fh=None):
-        print '** truncate:', path, '**'
+        print('** truncate:', path, '**')
         full_path = self._full_path(path)
         with open(full_path, 'r+') as f:
             f.truncate(length)
 
     def flush(self, path, fh):
-        print '** flush', path, '**'
+        print('** flush', path, '**')
         return os.fsync(fh)
 
     # Called ONCE for every open()
     def release(self, path, fh):
-        print '** release', path, '**'
+        print('** release', path, '**')
 
         temp_path = self.hide(self._full_path(path) + '.tmp')
 
@@ -216,7 +214,7 @@ class VersionFS(LoggingMixIn, Operations):
         return os.close(fh)
 
     def fsync(self, path, fdatasync, fh):
-        print '** fsync:', path, '**'
+        print('** fsync:', path, '**')
         return self.flush(path, fh)
 
     # Method to be called when NEW version is to be made
@@ -289,5 +287,5 @@ def main(mountpoint):
     FUSE(VersionFS(), mountpoint, nothreads=True, foreground=True)
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
+    # logging.basicConfig(level=logging.DEBUG)
     main(sys.argv[1])
