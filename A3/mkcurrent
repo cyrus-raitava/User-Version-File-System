@@ -66,12 +66,12 @@ def revertversion(path, number):
             if (int(versionNumber) == int(validVersions)):
                 print("SHOULD BE DELETING END VERSION NOW, WITH NUMBER: " + str(versionNumber) + "\n")
                 print("REMOVING: " + path + "." + str(validVersions) + "\n")
-                os.remove(path + "." + str(validVersions))
-
-            # Get number of version being dealt with
-            versionNumber = int(x[-1:])
-            print("CHANGING FROM: " + hiddenname[:-1] + str(versionNumber) + ", TO: " + hiddenname[:-1] + str(versionNumber + 1))
-            os.rename(hiddenname[:-1] + str(versionNumber), hiddenname[:-1] + str(versionNumber + 1))
+                os.remove(os.path.dirname(path) + "/." + os.path.basename(path) + "." + str(validVersions))
+            else:
+                # Get number of version being dealt with
+                versionNumber = int(x[-1:])
+                print("CHANGING FROM: " + hiddenname[:-1] + str(versionNumber) + ", TO: " + hiddenname[:-1] + str(versionNumber + 1))
+                os.rename(hiddenname[:-1] + str(versionNumber), hiddenname[:-1] + str(versionNumber + 1))
 
         # Remove and original file
         os.remove(path)
