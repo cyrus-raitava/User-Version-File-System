@@ -1,8 +1,12 @@
 #!/bin/bash
 
-fusermount -u mount
 versiondir="$PWD/.versiondir"
 mountdir="$PWD/mount"
+
+if [ -d "$mountdir" ]; then
+	# Control will enter here if $mountdir exists.
+	fusermount -u mount
+fi
 
 if [ -d "$versiondir" ]; then
 	# Control will enter here if $versiondir exists.

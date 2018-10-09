@@ -75,3 +75,23 @@ Saving of file:
 ** write: /three.txt **
 ** flush /three.txt **
 
+====================================================================================================
+
+ANSWER TO THE LAST ASSIGNMENT QUESTION:
+
+There are several pros and cons to cascading the deletion of a file to its subsequent past versions, in the personally implemented version file system I have designed for this assignment.
+
+Pros:
+
+1. Should the user truly want a file to be completely deleted (e.g for privacy reasons, or simply for the sake of not leaving any traces of the contents of the file), cascading deletion is desirable.
+
+2. In terms of scalability, memory-wise a system which deletes corresponding past versions may be more effective, and be able to hold more files/file versions (as opposed to a system which keeps all past versions of deleted files).
+
+Cons:
+
+1. Should the user accidentally delete a file, he/she may restore and recover the contents of said file, via the mkcurrent() (or any equivalent implementation) method. If the data in this file is very precious or important, an automated permanent deletion of all past versions may not be desirable.
+
+
+These are all very valid pros and cons, and should be taken into account properly, when deciding whether or not to include such a feature in a versioning file system implementation. For the purposes of this assignment, I chose to not implement anything for cascading deletion, meaning the deletion of a file does NOT delete its past versions.
+
+

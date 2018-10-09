@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="166749ac-1b5f-43e8-b8bd-8d90862fd161" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/catversion" beforeDir="false" afterPath="$PROJECT_DIR$/catversion" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/listversions" beforeDir="false" afterPath="$PROJECT_DIR$/listversions" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mkcurrent" beforeDir="false" afterPath="$PROJECT_DIR$/mkcurrent" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rmversions" beforeDir="false" afterPath="$PROJECT_DIR$/rmversions" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/versionfs.py" beforeDir="false" afterPath="$PROJECT_DIR$/versionfs.py" afterDir="false" />
-    </list>
+    <list default="true" id="166749ac-1b5f-43e8-b8bd-8d90862fd161" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,8 +57,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/versionfs.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="253">
-              <caret line="213" lean-forward="true" selection-start-line="213" selection-end-line="213" />
+            <state relative-caret-position="178">
+              <caret line="208" column="27" lean-forward="true" selection-start-line="208" selection-start-column="27" selection-end-line="208" selection-end-column="27" />
               <folding>
                 <element signature="e#22#59#0" expanded="true" />
                 <marker date="1539038901400" expanded="true" signature="1185:1288" ph="..." />
@@ -318,8 +312,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/versionfs.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="253">
-          <caret line="213" lean-forward="true" selection-start-line="213" selection-end-line="213" />
+        <state relative-caret-position="178">
+          <caret line="208" column="27" lean-forward="true" selection-start-line="208" selection-start-column="27" selection-end-line="208" selection-end-column="27" />
           <folding>
             <element signature="e#22#59#0" expanded="true" />
             <marker date="1539038901400" expanded="true" signature="1185:1288" ph="..." />
